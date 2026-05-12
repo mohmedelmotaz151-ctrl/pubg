@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>مسابقة ببجي الاحترافية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Cairo', sans-serif;
+    background:linear-gradient(135deg,#111,#1c1c1c,#2b2b2b);
+    color:white;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.quiz-container{
+    width:100%;
+    max-width:700px;
+    background:#1b1b1b;
+    border-radius:25px;
+    padding:35px;
+    box-shadow:0 0 30px rgba(255,170,0,0.3);
+    border:2px solid #ffb400;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.title h1{
+    color:#ffb400;
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.title p{
+    color:#ccc;
+}
+
+.question-number{
+    color:#ffb400;
+    margin-bottom:15px;
+    font-size:18px;
+}
+
+.question{
+    font-size:28px;
+    margin-bottom:25px;
+    line-height:1.5;
+}
+
+.answers{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.answer-btn{
+    background:#2c2c2c;
+    color:white;
+    border:none;
+    padding:18px;
+    border-radius:15px;
+    cursor:pointer;
+    font-size:18px;
+    transition:0.3s;
+    border:1px solid transparent;
+}
+
+.answer-btn:hover{
+    background:#ffb400;
+    color:black;
+    transform:scale(1.02);
+}
+
+.next-btn{
+    width:100%;
+    margin-top:25px;
+    background:#ffb400;
+    color:black;
+    border:none;
+    padding:16px;
+    font-size:20px;
+    font-weight:bold;
+    border-radius:15px;
+    cursor:pointer;
+    display:none;
+}
+
+.next-btn:hover{
+    background:#ffc933;
+}
+
+.result-box{
+    text-align:center;
+    display:none;
+}
+
+.result-box h2{
+    color:#ffb400;
+    margin-bottom:20px;
+    font-size:40px;
+}
+
+.result-box p{
+    font-size:24px;
+    margin-bottom:25px;
+}
+
+.restart-btn{
+    background:#ffb400;
+    color:black;
+    border:none;
+    padding:15px 30px;
+    border-radius:15px;
+    font-size:20px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.restart-btn:hover{
+    background:#ffc933;
+}
+
+.correct{
+    background:#28a745 !important;
+    color:white !important;
+}
+
+.wrong{
+    background:#dc3545 !important;
+    color:white !important;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+<div id="quiz-box">
+
+<div class="title">
+<h1>🎮 مسابقة ببجي</h1>
+<p>اختبر معلوماتك في PUBG Mobile</p>
+</div>
+<!-- ضع هذا الكود أسفل عنوان المسابقة مباشرة -->
+
+<div class="quiz-description">
+🔥 مرحبًا بك في أقوى مسابقة ببجي للمحترفين 🎮<br><br>
+
+اختبر معلوماتك في لعبة PUBG Mobile وتحدى أصدقاءك لمعرفة من هو اللاعب الأقوى والأكثر خبرة في الخرائط والأسلحة والسيارات والتكتيكات داخل اللعبة.<br><br>
+
+📌 تحتوي المسابقة على:
+<ul>
+<li>أسئلة احترافية عن ببجي</li>
+<li>نظام انتقال تلقائي بين الأسئلة</li>
+<li>تصميم عصري يشبه الألعاب</li>
+<li>إظهار النتيجة النهائية</li>
+<li>تجربة ممتعة وسريعة</li>
+</ul>
+
+🏆 هل تستطيع الحصول على العلامة الكاملة؟
+</div>
+
+<style>
+
+.quiz-description{
+    background:#252525;
+    border:1px solid #ffb400;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:25px;
+    color:#ddd;
+    line-height:2;
+    font-size:17px;
+}
+
+.quiz-description ul{
+    margin-top:10px;
+    padding-right:20px;
+}
+
+.quiz-description li{
+    margin-bottom:8px;
+    color:#ffcc33;
+}
+
+</style>
+
+<div class="question-number" id="question-number"></div>
+
+<div class="question" id="question"></div>
+
+<div class="answers" id="answers"></div>
+
+<button class="next-btn" id="nextBtn">
+السؤال التالي
+</button>
+
+</div>
+
+<div class="result-box" id="resultBox">
+
+<h2>🏆 انتهت المسابقة</h2>
+
+<p id="scoreText"></p>
+
+<!-- ضع هذا الكود أسفل نتيجة المسابقة داخل result-box -->
+
+<a id="shareBtn" target="_blank">
+<button class="share-btn">
+📤 مشاركة النتيجة عبر واتساب
+</button>
+</a>
+
+<style>
+
+.share-btn{
+    background:#25D366;
+    color:white;
+    border:none;
+    padding:15px 25px;
+    border-radius:15px;
+    font-size:18px;
+    cursor:pointer;
+    margin-top:15px;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.share-btn:hover{
+    background:#1ebe5d;
+    transform:scale(1.03);
+}
+
+</style>
+
+<script>
+
+function showResult(){
+
+document.getElementById("quiz-box").style.display = "none";
+
+document.getElementById("resultBox").style.display = "block";
+
+let resultMessage =
+"🎯 نتيجتك: " + score + " من " + questions.length;
+
+document.getElementById("scoreText").innerHTML = resultMessage;
+
+/* رابط مشاركة واتساب */
+
+let whatsappMessage =
+"🔥 لقد حصلت على " + score + "/" + questions.length +
+" في مسابقة ببجي الاحترافية 🎮🏆\n\n" +
+"جرب المسابقة الآن وتحدى أصدقاءك!";
+
+let shareURL =
+"https://wa.me/?text=" + encodeURIComponent(whatsappMessage);
+
+document.getElementById("shareBtn").href = shareURL;
+
+}
+
+</script>
+
+<button class="restart-btn" onclick="restartQuiz()">
+إعادة المسابقة
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const questions = [
+
+{
+question:"ما اسم الخريطة الأشهر في ببجي؟",
+answers:[
+{text:"إيرانغل", correct:true},
+{text:"ميرامار", correct:false},
+{text:"ليفك", correct:false},
+{text:"سانهوك", correct:false}
+]
+},
+
+{
+question:"كم عدد اللاعبين في مباراة ببجي الكلاسيكية (ارانغل )؟",
+answers:[
+{text:"50", correct:false},
+{text:"80", correct:false},
+{text:"100", correct:true},
+{text:"120", correct:false}
+]
+},
+
+{
+question:"ما أقوى سلاح قنص في ببجي؟",
+answers:[
+{text:"M24", correct:false},
+{text:"AWM", correct:true},
+{text:"Kar98", correct:false},
+{text:"MK14", correct:false}
+]
+},
+
+{
+question:"أي سيارة تعتبر الأسرع في اللعبة؟",
+answers:[
+{text:"Dacia", correct:false},
+{text:"Buggy", correct:true},
+{text:"UAZ", correct:false},
+{text:"Pickup", correct:false}
+]
+},
+
+{
+question:"ما اسم المنطقة الخطيرة التي تقلل الحياة؟",
+answers:[
+{text:"المنطقة الحمراء", correct:false},
+{text:"الزون الأزرق", correct:true},
+{text:"منطقة الثلج", correct:false},
+{text:"الدروب", correct:false}
+]
+}
+
+];
+
+const questionElement = document.getElementById("question");
+const answersElement = document.getElementById("answers");
+const nextBtn = document.getElementById("nextBtn");
+const questionNumber = document.getElementById("question-number");
+
+let currentQuestion = 0;
+let score = 0;
+
+function startQuiz(){
+
+currentQuestion = 0;
+score = 0;
+
+showQuestion();
+
+}
+
+function showQuestion(){
+
+resetState();
+
+let q = questions[currentQuestion];
+
+questionNumber.innerHTML =
+"السؤال " + (currentQuestion + 1) + " من " + questions.length;
+
+questionElement.innerHTML = q.question;
+
+q.answers.forEach(answer => {
+
+const button = document.createElement("button");
+
+button.innerHTML = answer.text;
+
+button.classList.add("answer-btn");
+
+answersElement.appendChild(button);
+
+button.addEventListener("click", () => selectAnswer(button, answer.correct));
+
+});
+
+}
+
+function resetState(){
+
+nextBtn.style.display = "none";
+
+answersElement.innerHTML = "";
+
+}
+
+function selectAnswer(button, correct){
+
+const buttons = document.querySelectorAll(".answer-btn");
+
+buttons.forEach(btn => btn.disabled = true);
+
+if(correct){
+
+button.classList.add("correct");
+
+score++;
+
+}else{
+
+button.classList.add("wrong");
+
+}
+
+buttons.forEach((btn,index)=>{
+
+if(questions[currentQuestion].answers[index].correct){
+
+btn.classList.add("correct");
+
+}
+
+});
+
+nextBtn.style.display = "block";
+
+}
+
+nextBtn.addEventListener("click", ()=>{
+
+currentQuestion++;
+
+if(currentQuestion < questions.length){
+
+showQuestion();
+
+}else{
+
+showResult();
+
+}
+
+});
+
+function showResult(){
+
+document.getElementById("quiz-box").style.display = "none";
+
+document.getElementById("resultBox").style.display = "block";
+
+document.getElementById("scoreText").innerHTML =
+"🎯 نتيجتك: " + score + " من " + questions.length;
+
+}
+
+function restartQuiz(){
+
+document.getElementById("quiz-box").style.display = "block";
+
+document.getElementById("resultBox").style.display = "none";
+
+startQuiz();
+
+}
+
+startQuiz();
+
+</script>
+
+</body>
+</html>
